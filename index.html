@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WishPop — One list. Zero duplicate gifts.</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="page">
+
+    <!-- 1. Navigation -->
+    <nav class="nav">
+      <div class="logo">WishPop</div>
+      <button class="btn" id="navCta" type="button">Join waitlist</button>
+    </nav>
+
+    <!-- 2. Headline block -->
+    <section class="hero">
+      <h1>One <span class="gray">list.</span><br>Zero <span class="gray">duplicate gifts.</span></h1>
+      <p class="sub">Create a wishlist, share one link, and let your friends quietly reserve gifts — without spoiling the surprise for you.</p>
+
+      <!-- 3. Waitlist form -->
+      <form class="form" id="waitlistForm" novalidate>
+        <input type="email" id="email" placeholder="Enter email address" autocomplete="email">
+        <button class="btn submit" type="submit">Join wait list</button>
+      </form>
+    </section>
+
+    <!-- 4. Folder stack illustration -->
+    <div class="stage" aria-hidden="true">
+
+      <!-- 1. Green folder (far left, mostly off-canvas) -->
+      <div class="folder f-green">
+        <div class="back"><div class="tab"></div></div>
+        <div class="card">
+          <div class="row">
+            <div class="thumb">🎧</div>
+            <div class="bars"><span class="bar w120"></span><span class="bar w80"></span></div>
+          </div>
+        </div>
+        <div class="front"></div>
+      </div>
+
+      <!-- 2. Yellow folder + embossed 2025 -->
+      <div class="folder f-yellow">
+        <div class="back"><div class="tab"></div></div>
+        <div class="card">
+          <div class="title">2025</div>
+          <div class="divider"></div>
+          <div class="row">
+            <div class="thumb">🎧</div>
+            <div class="bars"><span class="bar w120"></span><span class="bar w80"></span></div>
+          </div>
+        </div>
+        <div class="front"><div class="emboss">2025</div></div>
+      </div>
+
+      <!-- 3. Purple folder -->
+      <div class="folder f-purple">
+        <div class="back"><div class="tab"></div></div>
+        <div class="card">
+          <div class="title">2025</div>
+          <div class="divider"></div>
+          <div class="row">
+            <div class="thumb">🎧</div>
+            <span class="item-name">Airpod max</span>
+          </div>
+        </div>
+        <div class="front"></div>
+      </div>
+
+      <!-- 4. Red folder -->
+      <div class="folder f-red">
+        <div class="back"><div class="tab"></div></div>
+        <div class="card">
+          <div class="title">2024</div>
+          <div class="divider"></div>
+          <div class="row">
+            <div class="thumb">🎧</div>
+            <div class="bars"><span class="bar w120"></span><span class="bar w80"></span></div>
+          </div>
+        </div>
+        <div class="front"></div>
+      </div>
+
+      <!-- 5. White Wedding card (standalone) -->
+      <div class="wedding-card">
+        <div class="card">
+          <div class="title">Wedding</div>
+          <div class="divider"></div>
+          <div class="row">
+            <div class="thumb">🎧</div>
+            <div class="bars"><span class="bar w120"></span><span class="bar w80"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Blue folder (hero of the composition) -->
+      <div class="folder f-blue">
+        <div class="back"><div class="tab"></div></div>
+        <div class="card">
+          <div class="title">Items</div>
+          <div class="divider"></div>
+          <div class="row">
+            <div class="thumb">🎧</div>
+            <span class="item-name">Airpod max</span>
+          </div>
+        </div>
+        <div class="front"><div class="birthday">My 20th Birthday</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
