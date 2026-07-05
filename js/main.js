@@ -80,6 +80,9 @@ function loadHero() {
         .parseFromString(text, 'image/svg+xml')
         .documentElement;
       svg.classList.add('hero-folders');
+      /* keep the artwork glued to the bottom edge when the stage box
+         is taller or shorter than the drawing's own aspect ratio */
+      svg.setAttribute('preserveAspectRatio', 'xMidYMax meet');
       if (heroPlayed) svg.classList.add('no-anim'); /* breakpoint swap: don't replay intro */
       stage.replaceChildren(svg);
       heroPlayed = true;

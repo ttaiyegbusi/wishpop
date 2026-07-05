@@ -33,6 +33,7 @@ body {
   position: relative;
   height: 100vh;
   height: 100svh;
+  height: 100dvh; /* tracks mobile browser chrome (URL bar) collapsing */
   overflow: hidden;
 }
 
@@ -309,21 +310,42 @@ h1 .gray {
 
 @media (max-width: 767px) {
   .nav { padding: 24px; }
-  h1 { font-size: 44px; }
+  h1 { font-size: clamp(34px, 10.5vw, 44px); }
   .sub { font-size: 17px; }
-  .hero { margin-top: 80px; }
+  .hero { margin-top: clamp(20px, 7svh, 72px); }
   .form {
     flex-direction: column;
     gap: 12px;
     padding: 0 24px;
+    margin-top: 28px;
   }
   .form input { width: 100%; }
   .form .submit { width: 100%; }
 
+  /* content and illustration each own their vertical space: the page
+     becomes a flex column and the stage gets only what's left over,
+     so the form can never sit on top of the folders on short screens */
+  .page {
+    display: flex;
+    flex-direction: column;
+  }
+  .stage {
+    position: static;
+    flex: 1 1 auto;
+    min-height: 0;
+    margin-top: 20px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .hero-folders {
+    width: 100%;
+    height: 100%; /* artwork scales to the leftover space (meet), pinned bottom */
+  }
+
   /* dedicated mobile composition rendered at native size — no CSS
      downscaling of the big desktop artwork (that caused the jank) */
   .stage { transform: none; }
-  .hero-folders { width: 100%; }
 
   /* fan-out start offsets rescaled to the 376-unit mobile canvas */
   .fan-blue    { --sx: 0px;    --sy: 10px;  }
@@ -339,6 +361,17 @@ h1 .gray {
   .fan-wedding:hover { transform: translateY(-4px); }
 }
 
-@media (max-width: 479px) {
-  .nav .btn { display: none; }
+
+/* short phones (SE, minis): tighten the vertical rhythm so the folder
+   illustration keeps real presence below the form. Kept last in the
+   file so it wins the cascade over the base mobile block above. */
+@media (max-width: 767px) and (max-height: 620px) {
+  .nav { padding: 16px 24px; }
+  .hero { margin-top: 10px; }
+  h1 { font-size: clamp(30px, 9vw, 38px); }
+  .sub { font-size: 15px; margin-top: 16px; }
+  .form { margin-top: 20px; }
+  .form input,
+  .form .submit { height: 52px; }
+  .stage { margin-top: 12px; }
 }
