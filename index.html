@@ -17,7 +17,7 @@
 
     <!-- 2. Headline block -->
     <section class="hero">
-      <h1>One <span class="gray">list.</span><br>Zero <span class="gray">duplicate gifts.</span></h1>
+      <h1 aria-label="One wishlist. Zero duplicate gifts.">One <span class="gray"><span id="typeWord">wishlist.</span><span class="caret"></span></span><br>Zero <span class="gray">duplicate gifts.</span></h1>
       <p class="sub">Create a wishlist, share one link, and let your friends quietly reserve gifts — without spoiling the surprise for you.</p>
 
       <!-- 3. Waitlist form -->
@@ -27,9 +27,10 @@
       </form>
     </section>
 
-    <!-- 4. Folder stack illustration (full composition exported from the design) -->
-    <div class="stage" aria-hidden="true">
-      <img class="hero-folders" src="assets/hero-folders.svg" alt="">
+    <!-- 4. Folder stack illustration (full composition exported from the design).
+         Inlined by js/main.js so the folder groups can animate on load. -->
+    <div class="stage" id="stage" aria-hidden="true">
+      <noscript><img class="hero-folders" src="assets/hero-folders.svg" alt=""></noscript>
     </div>
   </div>
 

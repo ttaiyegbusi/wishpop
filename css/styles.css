@@ -99,6 +99,27 @@ h1 .gray {
   color: #ADADAD;
 }
 
+/* typewriter caret — sized in em so it scales with the headline */
+.caret {
+  display: inline-block;
+  width: 0.05em;
+  height: 0.78em;
+  margin-left: 0.06em;
+  background: #ADADAD;
+  transform: translateY(0.08em);
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    display: none;
+  }
+}
+
 .sub {
   margin: 28px auto 0;
   max-width: 620px;
@@ -188,7 +209,82 @@ h1 .gray {
 .hero-folders {
   display: block;
   width: 1230px;
+  height: auto;
   flex: 0 0 auto;
+}
+
+/* --- opening animation: deck stacked behind the blue folder fans out ---
+   Final state is transform:none — the untouched composition. Custom props
+   define where each piece starts (gathered center) and its stagger. */
+
+.fan {
+  transform-box: fill-box;
+  transform-origin: 50% 60%;
+  /* fill-mode backwards (not both): the animation ends at transform:none,
+     so nothing changes visually, but transform stays free for :hover. */
+  animation: fan-out 950ms cubic-bezier(0.22, 0.85, 0.3, 1) backwards;
+  animation-delay: var(--d, 250ms);
+  will-change: transform;
+}
+
+@keyframes fan-out {
+  from {
+    transform: translate(var(--sx, 0px), var(--sy, 0px))
+               rotate(var(--sr, 0deg))
+               scale(0.96);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.fan-blue    { --sx: 0px;    --sy: 30px;  --sr: 0deg;   --d: 250ms; }
+.fan-wedding { --sx: 375px;  --sy: -60px; --sr: 8deg;   --d: 340ms; }
+.fan-purple  { --sx: -300px; --sy: 50px;  --sr: -10deg; --d: 370ms; }
+.fan-yellow  { --sx: 130px;  --sy: 40px;  --sr: 10deg;  --d: 400ms; }
+.fan-red     { --sx: -355px; --sy: -90px; --sr: -14deg; --d: 430ms; }
+.fan-green   { --sx: 300px;  --sy: -70px; --sr: 14deg;  --d: 460ms; }
+
+/* --- hover: the card slides up out of its folder pocket --- */
+
+@media (hover: hover) {
+  .card-lift {
+    transform-box: fill-box;
+    transition: transform 260ms cubic-bezier(0.33, 0.8, 0.4, 1);
+  }
+
+  .fan:hover .card-lift {
+    transform: translateY(-16px);
+  }
+
+  .fan-blue:hover .card-lift {
+    transform: translateY(-22px);
+  }
+
+  /* deeper pocket + partially covered by the wedding card — needs more travel */
+  .fan-green:hover .card-lift {
+    transform: translateY(-30px);
+  }
+
+  /* standalone card — no pocket, the whole card floats up gently */
+  .fan-wedding {
+    transition: transform 260ms cubic-bezier(0.33, 0.8, 0.4, 1);
+  }
+
+  .fan-wedding:hover {
+    transform: translateY(-10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fan {
+    animation: none;
+  }
+
+  .card-lift,
+  .fan-wedding {
+    transition: none;
+  }
 }
 
 /* --------------------------------------------------------------------------
