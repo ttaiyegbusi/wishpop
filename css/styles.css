@@ -276,6 +276,11 @@ h1 .gray {
   }
 }
 
+/* applied when the SVG is re-injected after a breakpoint swap */
+.hero-folders.no-anim .fan {
+  animation: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .fan {
     animation: none;
@@ -314,7 +319,24 @@ h1 .gray {
   }
   .form input { width: 100%; }
   .form .submit { width: 100%; }
-  .stage { transform: scale(0.55); }
+
+  /* dedicated mobile composition rendered at native size — no CSS
+     downscaling of the big desktop artwork (that caused the jank) */
+  .stage { transform: none; }
+  .hero-folders { width: 100%; }
+
+  /* fan-out start offsets rescaled to the 376-unit mobile canvas */
+  .fan-blue    { --sx: 0px;    --sy: 10px;  }
+  .fan-wedding { --sx: 85px;   --sy: -20px; }
+  .fan-purple  { --sx: -95px;  --sy: 15px;  }
+  .fan-yellow  { --sx: 70px;   --sy: 15px;  }
+  .fan-red     { --sx: -100px; --sy: -28px; }
+  .fan-green   { --sx: 95px;   --sy: -25px; }
+
+  .fan:hover .card-lift { transform: translateY(-6px); }
+  .fan-blue:hover .card-lift { transform: translateY(-8px); }
+  .fan-green:hover .card-lift { transform: translateY(-10px); }
+  .fan-wedding:hover { transform: translateY(-4px); }
 }
 
 @media (max-width: 479px) {

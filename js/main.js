@@ -60,20 +60,38 @@ if (typeEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 }
 
 /* Inline the folder illustration so its groups can run the fan-out
-   opening animation (CSS keys off the .fan classes inside the SVG). */
-fetch('assets/hero-folders.svg')
-  .then((r) => r.text())
-  .then((text) => {
-    const svg = new DOMParser()
-      .parseFromString(text, 'image/svg+xml')
-      .documentElement;
-    svg.classList.add('hero-folders');
-    document.getElementById('stage').replaceChildren(svg);
-  })
-  .catch(() => {
-    const img = document.createElement('img');
-    img.className = 'hero-folders';
-    img.src = 'assets/hero-folders.svg';
-    img.alt = '';
-    document.getElementById('stage').replaceChildren(img);
-  });
+   opening animation (CSS keys off the .fan classes inside the SVG).
+   Phones get a dedicated small composition: scaling the 1230px desktop
+   artwork down with CSS meant re-rasterizing all its blur filters at
+   full size every animation frame — the source of mobile jank. */
+const stage = document.getElementById('stage');
+const mobileMq = window.matchMedia('(max-width: 767px)');
+let heroPlayed = false;
+
+function loadHero() {
+  const src = mobileMq.matches
+    ? 'assets/hero-folders-mobile.svg'
+    : 'assets/hero-folders.svg';
+
+  fetch(src)
+    .then((r) => r.text())
+    .then((text) => {
+      const svg = new DOMParser()
+        .parseFromString(text, 'image/svg+xml')
+        .documentElement;
+      svg.classList.add('hero-folders');
+      if (heroPlayed) svg.classList.add('no-anim'); /* breakpoint swap: don't replay intro */
+      stage.replaceChildren(svg);
+      heroPlayed = true;
+    })
+    .catch(() => {
+      const img = document.createElement('img');
+      img.className = 'hero-folders';
+      img.src = src;
+      img.alt = '';
+      stage.replaceChildren(img);
+    });
+}
+
+loadHero();
+mobileMq.addEventListener('change', loadHero);
