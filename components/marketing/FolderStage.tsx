@@ -9,6 +9,8 @@ export function FolderStage() {
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
+    // guarded above; alias keeps the non-null narrowing inside the nested closures
+    const stageEl: HTMLDivElement = stage;
 
     const mobileMq = window.matchMedia('(max-width: 767px)');
 
@@ -40,7 +42,7 @@ export function FolderStage() {
         wrap.appendChild(fixed);
       });
 
-      stage.replaceChildren(wrap);
+      stageEl.replaceChildren(wrap);
 
       requestAnimationFrame(() => {
         wrap.querySelectorAll<SVGSVGElement>('.fan-layer').forEach((layer) => {
@@ -71,7 +73,7 @@ export function FolderStage() {
         } else {
           svg.classList.add('hero-folders');
           svg.setAttribute('preserveAspectRatio', 'xMidYMax meet');
-          stage.replaceChildren(svg);
+          stageEl.replaceChildren(svg);
           root = svg;
         }
 
@@ -82,7 +84,7 @@ export function FolderStage() {
         img.className = 'hero-folders';
         img.src = src;
         img.alt = '';
-        stage.replaceChildren(img);
+        stageEl.replaceChildren(img);
       }
     }
 

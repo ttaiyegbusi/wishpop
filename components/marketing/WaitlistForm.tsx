@@ -115,8 +115,10 @@ function confettiRain() {
 
   const canvas = document.createElement('canvas');
   canvas.className = 'confetti';
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
+  const context = canvas.getContext('2d');
+  if (!context) return;
+  // guarded above; typed alias keeps the non-null narrowing inside the frame loop
+  const ctx: CanvasRenderingContext2D = context;
 
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const width = window.innerWidth;
