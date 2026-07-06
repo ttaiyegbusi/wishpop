@@ -1,14 +1,4 @@
-/* ==========================================================================
-   WishPop — Waitlist hero
-   ========================================================================== */
-
-@font-face {
-  font-family: 'IBM Plex Sans';
-  src: url('../fonts/IBMPlexSans-VariableFont_wdth,wght.ttf') format('truetype-variations');
-  font-weight: 100 700;
-  font-style: normal;
-  font-display: swap;
-}
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 
 * {
   margin: 0;
@@ -18,7 +8,7 @@
 
 html,
 body {
-  height: 100%;
+  min-height: 100%;
 }
 
 body {
@@ -29,17 +19,20 @@ body {
   font-synthesis: none;
 }
 
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
 .page {
   position: relative;
   height: 100vh;
   height: 100svh;
-  height: 100dvh; /* tracks mobile browser chrome (URL bar) collapsing */
+  height: 100dvh;
   overflow: hidden;
 }
-
-/* --------------------------------------------------------------------------
-   1. Navigation
-   -------------------------------------------------------------------------- */
 
 .nav {
   display: flex;
@@ -70,14 +63,15 @@ body {
   transition: all 150ms ease;
 }
 
-.btn:hover {
+.btn:hover:not(:disabled) {
   background: #000000;
   transform: translateY(-1px);
 }
 
-/* --------------------------------------------------------------------------
-   2. Headline block
-   -------------------------------------------------------------------------- */
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
 
 .hero {
   max-width: 1000px;
@@ -100,7 +94,6 @@ h1 .gray {
   color: #ADADAD;
 }
 
-/* typewriter caret — sized in em so it scales with the headline */
 .caret {
   display: inline-block;
   width: 0.05em;
@@ -116,9 +109,7 @@ h1 .gray {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .caret {
-    display: none;
-  }
+  .caret { display: none; }
 }
 
 .sub {
@@ -131,10 +122,6 @@ h1 .gray {
   text-align: center;
 }
 
-/* --------------------------------------------------------------------------
-   3. Waitlist form
-   -------------------------------------------------------------------------- */
-
 .form {
   margin-top: 40px;
   display: flex;
@@ -143,7 +130,8 @@ h1 .gray {
   gap: 16px;
 }
 
-.form input {
+.form input,
+.input {
   font-family: inherit;
   width: 480px;
   height: 60px;
@@ -156,12 +144,14 @@ h1 .gray {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-.form input::placeholder {
+.form input::placeholder,
+.input::placeholder {
   color: #B8B8B8;
   font-size: 17px;
 }
 
-.form input:focus {
+.form input:focus,
+.input:focus {
   outline: 2px solid #111111;
   outline-offset: 0;
 }
@@ -172,14 +162,15 @@ h1 .gray {
   padding: 0 32px;
 }
 
-.success {
-  font-size: 17px;
+.form-message {
+  margin-top: 14px;
+  font-size: 15px;
   font-weight: 500;
-  color: #111111;
   text-align: center;
 }
 
-/* --- waitlist success modal --- */
+.form-message.success { color: #111111; }
+.form-message.error { color: #C62828; }
 
 .modal {
   position: fixed;
@@ -190,10 +181,6 @@ h1 .gray {
   justify-content: center;
 }
 
-.modal[hidden] {
-  display: none;
-}
-
 .modal-backdrop {
   position: absolute;
   inset: 0;
@@ -201,6 +188,8 @@ h1 .gray {
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   animation: backdrop-in 220ms ease both;
+  border: 0;
+  cursor: pointer;
 }
 
 .modal-card {
@@ -243,27 +232,24 @@ h1 .gray {
 
 @keyframes backdrop-in {
   from { opacity: 0; }
-  to   { opacity: 1; }
+  to { opacity: 1; }
 }
 
 @keyframes card-pop {
   from { opacity: 0; transform: scale(0.94) translateY(10px); }
-  to   { opacity: 1; transform: none; }
+  to { opacity: 1; transform: none; }
 }
 
 @keyframes sheet-up {
   from { opacity: 1; transform: translateY(100%); }
-  to   { opacity: 1; transform: none; }
+  to { opacity: 1; transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .modal-backdrop,
-  .modal-card {
-    animation: none;
-  }
+  .modal-card { animation: none; }
 }
 
-/* confetti canvas rides above everything, purely decorative */
 .confetti {
   position: fixed;
   inset: 0;
@@ -277,16 +263,10 @@ h1 .gray {
   20%, 80% { transform: translateX(4px); }
   30%, 70% { transform: translateX(-6px); }
   40%, 60% { transform: translateX(6px); }
-  50%      { transform: translateX(-4px); }
+  50% { transform: translateX(-4px); }
 }
 
-.shake {
-  animation: shake 400ms ease;
-}
-
-/* --------------------------------------------------------------------------
-   4. Folder stack illustration
-   -------------------------------------------------------------------------- */
+.shake { animation: shake 400ms ease; }
 
 .stage {
   position: absolute;
@@ -307,15 +287,9 @@ h1 .gray {
   flex: 0 0 auto;
 }
 
-/* --- opening animation: deck stacked behind the blue folder fans out ---
-   Final state is transform:none — the untouched composition. Custom props
-   define where each piece starts (gathered center) and its stagger. */
-
 .fan {
   transform-box: fill-box;
   transform-origin: 50% 60%;
-  /* fill-mode backwards (not both): the animation ends at transform:none,
-     so nothing changes visually, but transform stays free for :hover. */
   animation: fan-out 950ms cubic-bezier(0.22, 0.85, 0.3, 1) backwards;
   animation-delay: var(--d, 250ms);
   will-change: transform;
@@ -323,23 +297,17 @@ h1 .gray {
 
 @keyframes fan-out {
   from {
-    transform: translate(var(--sx, 0px), var(--sy, 0px))
-               rotate(var(--sr, 0deg))
-               scale(0.96);
+    transform: translate(var(--sx, 0px), var(--sy, 0px)) rotate(var(--sr, 0deg)) scale(0.96);
   }
-  to {
-    transform: none;
-  }
+  to { transform: none; }
 }
 
-.fan-blue    { --sx: 0px;    --sy: 30px;  --sr: 0deg;   --d: 250ms; }
-.fan-wedding { --sx: 375px;  --sy: -60px; --sr: 8deg;   --d: 340ms; }
-.fan-purple  { --sx: -300px; --sy: 50px;  --sr: -10deg; --d: 370ms; }
-.fan-yellow  { --sx: 130px;  --sy: 40px;  --sr: 10deg;  --d: 400ms; }
-.fan-red     { --sx: -355px; --sy: -90px; --sr: -14deg; --d: 430ms; }
-.fan-green   { --sx: 300px;  --sy: -70px; --sr: 14deg;  --d: 460ms; }
-
-/* --- hover: the card slides up out of its folder pocket --- */
+.fan-blue { --sx: 0px; --sy: 30px; --sr: 0deg; --d: 250ms; }
+.fan-wedding { --sx: 375px; --sy: -60px; --sr: 8deg; --d: 340ms; }
+.fan-purple { --sx: -300px; --sy: 50px; --sr: -10deg; --d: 370ms; }
+.fan-yellow { --sx: 130px; --sy: 40px; --sr: 10deg; --d: 400ms; }
+.fan-red { --sx: -355px; --sy: -90px; --sr: -14deg; --d: 430ms; }
+.fan-green { --sx: 300px; --sy: -70px; --sr: 14deg; --d: 460ms; }
 
 @media (hover: hover) {
   .card-lift {
@@ -347,48 +315,98 @@ h1 .gray {
     transition: transform 260ms cubic-bezier(0.33, 0.8, 0.4, 1);
   }
 
-  .fan:hover .card-lift {
-    transform: translateY(-16px);
-  }
+  .fan:hover .card-lift { transform: translateY(-16px); }
+  .fan-blue:hover .card-lift { transform: translateY(-22px); }
+  .fan-green:hover .card-lift { transform: translateY(-30px); }
 
-  .fan-blue:hover .card-lift {
-    transform: translateY(-22px);
-  }
-
-  /* deeper pocket + partially covered by the wedding card — needs more travel */
-  .fan-green:hover .card-lift {
-    transform: translateY(-30px);
-  }
-
-  /* standalone card — no pocket, the whole card floats up gently */
   .fan-wedding {
     transition: transform 260ms cubic-bezier(0.33, 0.8, 0.4, 1);
   }
 
-  .fan-wedding:hover {
-    transform: translateY(-10px);
-  }
+  .fan-wedding:hover { transform: translateY(-10px); }
 }
 
-/* applied when the SVG is re-injected after a breakpoint swap */
-.hero-folders.no-anim .fan {
-  animation: none;
-}
+.hero-folders.no-anim .fan { animation: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  .fan {
-    animation: none;
-  }
-
+  .fan { animation: none; }
   .card-lift,
-  .fan-wedding {
-    transition: none;
-  }
+  .fan-wedding { transition: none; }
 }
 
-/* --------------------------------------------------------------------------
-   Responsive
-   -------------------------------------------------------------------------- */
+.system-page,
+.auth-shell,
+.app-shell {
+  min-height: 100vh;
+  padding: 48px;
+}
+
+.system-page,
+.auth-shell {
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.auth-card,
+.empty-panel {
+  width: min(680px, 100%);
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 16px 50px rgba(17, 17, 17, 0.08);
+}
+
+.auth-card h1,
+.dashboard-header h1,
+.empty-panel h1,
+.empty-panel h2 {
+  font-size: clamp(32px, 5vw, 56px);
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.auth-card p,
+.empty-panel p {
+  margin-top: 12px;
+  color: #6B6B6B;
+  line-height: 1.55;
+}
+
+.eyebrow {
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9E9E9E;
+}
+
+.dashboard-header {
+  margin-bottom: 32px;
+}
+
+.panel-grid {
+  display: grid;
+  gap: 24px;
+}
+
+code {
+  background: #F2F2F2;
+  border-radius: 8px;
+  padding: 2px 6px;
+}
+
+.badge,
+.toast {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: #F2F2F2;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
 
 @media (min-width: 1280px) and (max-height: 1010px) {
   .stage { transform: scale(0.75); }
@@ -403,8 +421,6 @@ h1 .gray {
 
 @media (max-width: 767px) {
   .nav { padding: 20px 24px; }
-  /* sized so "One surprise." / "Zero duplicate gifts." each hold one
-     line — a 2-line headline leaves the illustration real room */
   h1 { font-size: clamp(26px, 8vw, 40px); }
   .sub { font-size: 16px; margin-top: 16px; }
   .hero { margin-top: clamp(12px, 4svh, 48px); }
@@ -414,10 +430,9 @@ h1 .gray {
     padding: 0 24px;
     margin-top: 20px;
   }
-  .form input { width: 100%; height: 56px; }
+  .form input,
   .form .submit { width: 100%; height: 56px; }
 
-  /* modal becomes a bottom sheet on phones */
   .modal { align-items: flex-end; }
   .modal-card {
     width: 100%;
@@ -426,13 +441,11 @@ h1 .gray {
     animation-name: sheet-up;
   }
 
-  /* content and illustration each own their vertical space: the page
-     becomes a flex column and the stage gets only what's left over,
-     so the form can never sit on top of the folders on short screens */
   .page {
     display: flex;
     flex-direction: column;
   }
+
   .stage {
     position: static;
     flex: 1 1 auto;
@@ -441,11 +454,9 @@ h1 .gray {
     display: flex;
     align-items: flex-end;
     justify-content: center;
+    transform: none;
   }
-  /* full-bleed width at the artwork's natural ratio; when the leftover
-     space is shorter, max-height clamps the box and the layers' slice
-     alignment crops the artwork's bottom — folders run off the screen
-     edge (the design intent) instead of shrinking */
+
   .hero-folders {
     position: relative;
     width: 100%;
@@ -464,38 +475,26 @@ h1 .gray {
     will-change: transform;
   }
 
-  /* layers animate as composited elements; the inner groups stay still */
-  .fan {
-    animation: none;
-    will-change: auto;
-  }
+  .fan { animation: none; will-change: auto; }
+  .hero-folders.no-anim .fan-layer { animation: none; }
 
-  .hero-folders.no-anim .fan-layer {
-    animation: none;
-  }
-
-  /* dedicated mobile composition rendered at native size — no CSS
-     downscaling of the big desktop artwork (that caused the jank) */
-  .stage { transform: none; }
-
-  /* fan-out start offsets rescaled to the 376-unit mobile canvas */
-  .fan-blue    { --sx: 0px;    --sy: 10px;  }
-  .fan-wedding { --sx: 85px;   --sy: -20px; }
-  .fan-purple  { --sx: -95px;  --sy: 15px;  }
-  .fan-yellow  { --sx: 70px;   --sy: 15px;  }
-  .fan-red     { --sx: -100px; --sy: -28px; }
-  .fan-green   { --sx: 95px;   --sy: -25px; }
+  .fan-blue { --sx: 0px; --sy: 10px; }
+  .fan-wedding { --sx: 85px; --sy: -20px; }
+  .fan-purple { --sx: -95px; --sy: 15px; }
+  .fan-yellow { --sx: 70px; --sy: 15px; }
+  .fan-red { --sx: -100px; --sy: -28px; }
+  .fan-green { --sx: 95px; --sy: -25px; }
 
   .fan:hover .card-lift { transform: translateY(-6px); }
   .fan-blue:hover .card-lift { transform: translateY(-8px); }
   .fan-green:hover .card-lift { transform: translateY(-10px); }
   .fan-wedding:hover { transform: translateY(-4px); }
+
+  .system-page,
+  .auth-shell,
+  .app-shell { padding: 24px; }
 }
 
-
-/* short phones (SE, minis): tighten the vertical rhythm so the folder
-   illustration keeps real presence below the form. Kept last in the
-   file so it wins the cascade over the base mobile block above. */
 @media (max-width: 767px) and (max-height: 620px) {
   .nav { padding: 14px 24px; }
   .hero { margin-top: 8px; }
@@ -507,9 +506,6 @@ h1 .gray {
   .stage { margin-top: 8px; }
 }
 
-/* last so it beats the mobile block that assigns the layer animation */
 @media (prefers-reduced-motion: reduce) {
-  .fan-layer {
-    animation: none;
-  }
+  .fan-layer { animation: none; }
 }
