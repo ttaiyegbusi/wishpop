@@ -68,8 +68,64 @@ const stage = document.getElementById('stage');
 const mobileMq = window.matchMedia('(max-width: 767px)');
 let heroPlayed = false;
 
+/* Mobile: split the composition into one <svg> per folder. Animating
+   groups inside a single SVG forces a full repaint (filters included)
+   every frame — desktops cope, phones drop frames. Separate sibling
+   SVGs become independently GPU-composited layers, so the fan-out
+   animates cached bitmaps instead of re-rasterizing artwork. */
+function buildLayeredHero(svg) {
+  const viewBox = svg.getAttribute('viewBox');
+  const [, , vbW, vbH] = viewBox.split(/\s+/).map(Number);
+  const defs = svg.querySelector('defs');
+
+  const wrap = document.createElement('div');
+  wrap.className = 'hero-folders';
+
+  svg.querySelectorAll('.fan').forEach((group, i) => {
+    /* clone the real root (all original attrs incl. width/height) —
+       synthetic bare <svg> roots rendered filter effects as raw black */
+    const layer = svg.cloneNode(false);
+    layer.setAttribute('preserveAspectRatio', 'xMidYMin slice');
+    const variant = [...group.classList].filter((c) => c !== 'fan').join(' ');
+    layer.setAttribute('class', `fan-layer ${variant}`);
+    if (defs) layer.appendChild(defs.cloneNode(true));
+    layer.appendChild(group);
+
+    /* the cloned defs duplicate ids across layers, and url(#...) refs
+       resolve document-wide to the first copy — namespace ids per layer
+       so every filter/clip/gradient resolves inside its own layer */
+    const suffix = `-L${i}`;
+    const ids = [...layer.querySelectorAll('[id]')].map((el) => el.id);
+    let markup = new XMLSerializer().serializeToString(layer);
+    for (const id of ids) {
+      markup = markup.split(`url(#${id})`).join(`url(#${id}${suffix})`);
+      markup = markup.split(`"#${id}"`).join(`"#${id}${suffix}"`);
+      markup = markup.split(`id="${id}"`).join(`id="${id}${suffix}"`);
+    }
+    const fixed = new DOMParser()
+      .parseFromString(markup, 'image/svg+xml')
+      .documentElement;
+    wrap.appendChild(fixed);
+  });
+
+  stage.replaceChildren(wrap);
+
+  /* rotate each layer around its own folder's center, not the canvas center */
+  requestAnimationFrame(() => {
+    wrap.querySelectorAll('.fan-layer').forEach((layer) => {
+      const b = layer.querySelector('.fan').getBBox();
+      const cx = ((b.x + b.width / 2) / vbW) * 100;
+      const cy = ((b.y + b.height / 2) / vbH) * 100;
+      layer.style.transformOrigin = `${cx}% ${cy}%`;
+    });
+  });
+
+  return wrap;
+}
+
 function loadHero() {
-  const src = mobileMq.matches
+  const mobile = mobileMq.matches;
+  const src = mobile
     ? 'assets/hero-folders-mobile.svg'
     : 'assets/hero-folders.svg';
 
@@ -79,12 +135,17 @@ function loadHero() {
       const svg = new DOMParser()
         .parseFromString(text, 'image/svg+xml')
         .documentElement;
-      svg.classList.add('hero-folders');
-      /* keep the artwork glued to the bottom edge when the stage box
-         is taller or shorter than the drawing's own aspect ratio */
-      svg.setAttribute('preserveAspectRatio', 'xMidYMax meet');
-      if (heroPlayed) svg.classList.add('no-anim'); /* breakpoint swap: don't replay intro */
-      stage.replaceChildren(svg);
+
+      let root;
+      if (mobile) {
+        root = buildLayeredHero(svg);
+      } else {
+        svg.classList.add('hero-folders');
+        svg.setAttribute('preserveAspectRatio', 'xMidYMax meet');
+        stage.replaceChildren(svg);
+        root = svg;
+      }
+      if (heroPlayed) root.classList.add('no-anim'); /* breakpoint swap: don't replay intro */
       heroPlayed = true;
     })
     .catch(() => {

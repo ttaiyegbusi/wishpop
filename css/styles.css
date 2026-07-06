@@ -338,9 +338,36 @@ h1 .gray {
     align-items: flex-end;
     justify-content: center;
   }
+  /* full-bleed width at the artwork's natural ratio; when the leftover
+     space is shorter, max-height clamps the box and the layers' slice
+     alignment crops the artwork's bottom — folders run off the screen
+     edge (the design intent) instead of shrinking */
   .hero-folders {
+    position: relative;
     width: 100%;
-    height: 100%; /* artwork scales to the leftover space (meet), pinned bottom */
+    height: auto;
+    aspect-ratio: 376 / 256;
+    max-height: 100%;
+  }
+
+  .fan-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    animation: fan-out 950ms cubic-bezier(0.22, 0.85, 0.3, 1) backwards;
+    animation-delay: var(--d, 250ms);
+    will-change: transform;
+  }
+
+  /* layers animate as composited elements; the inner groups stay still */
+  .fan {
+    animation: none;
+    will-change: auto;
+  }
+
+  .hero-folders.no-anim .fan-layer {
+    animation: none;
   }
 
   /* dedicated mobile composition rendered at native size — no CSS
@@ -374,4 +401,11 @@ h1 .gray {
   .form input,
   .form .submit { height: 52px; }
   .stage { margin-top: 12px; }
+}
+
+/* last so it beats the mobile block that assigns the layer animation */
+@media (prefers-reduced-motion: reduce) {
+  .fan-layer {
+    animation: none;
+  }
 }
