@@ -19,8 +19,119 @@ form.addEventListener('submit', (e) => {
     return;
   }
 
-  form.innerHTML = '<p class="success">You’re on the list \u{1F389}</p>';
+  email.value = '';
+  email.blur();
+  openModal();
+  confettiRain();
 });
+
+/* --- success modal --- */
+
+const modal = document.getElementById('successModal');
+const modalOk = document.getElementById('modalOk');
+let lastFocused = null;
+
+function openModal() {
+  lastFocused = document.activeElement;
+  modal.hidden = false;
+  requestAnimationFrame(() => modalOk.focus());
+}
+
+function closeModal() {
+  modal.hidden = true;
+  if (lastFocused && lastFocused.focus) lastFocused.focus();
+}
+
+modalOk.addEventListener('click', closeModal);
+modal.querySelector('[data-close]').addEventListener('click', closeModal);
+
+document.addEventListener('keydown', (e) => {
+  if (modal.hidden) return;
+  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Tab') {
+    e.preventDefault(); /* the Okay button is the only focusable element */
+    modalOk.focus();
+  }
+});
+
+/* --- confetti: canvas rain from the top in the folder colors --- */
+
+function confettiRain() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const canvas = document.createElement('canvas');
+  canvas.className = 'confetti';
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.scale(dpr, dpr);
+  document.body.appendChild(canvas);
+
+  const COLORS = ['#3BC98A', '#F5A83B', '#2F7BF6', '#6D3BEF', '#F05A5A'];
+  const COUNT = Math.min(160, Math.max(80, Math.floor(W / 7)));
+  const pieces = [];
+  for (let i = 0; i < COUNT; i++) {
+    pieces.push({
+      x: Math.random() * W,
+      /* staggered above the viewport so the rain arrives in waves */
+      y: -20 - Math.random() * H * 0.9,
+      w: 6 + Math.random() * 5,
+      h: 10 + Math.random() * 9,
+      color: COLORS[i % COLORS.length],
+      vy: 120 + Math.random() * 130,
+      vx: (Math.random() - 0.5) * 14, /* faint constant drift, no zig-zag */
+      phase: Math.random() * Math.PI * 2,
+      rot: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 8,
+      flipFreq: 2 + Math.random() * 3,
+    });
+  }
+
+  let start = null;
+  let last = null;
+  const RAIN_MS = 4500; /* fade the tail off after this */
+
+  function frame(t) {
+    if (start === null) { start = t; last = t; }
+    const dt = Math.min((t - last) / 1000, 0.05);
+    last = t;
+    const secs = (t - start) / 1000;
+
+    ctx.clearRect(0, 0, W, H);
+    canvas.style.opacity = t - start > RAIN_MS ? '0' : '1';
+
+    let alive = false;
+    for (const p of pieces) {
+      p.vy += 30 * dt; /* gentle gravity */
+      p.y += p.vy * dt;
+      p.x += p.vx * dt;
+      p.rot += p.rotSpeed * dt;
+      if (p.y > H + 30) continue;
+      alive = true;
+      if (p.y < -25) continue;
+
+      const flip = Math.cos(secs * p.flipFreq * Math.PI * 2 + p.phase); /* 3D tumble */
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.scale(1, Math.max(Math.abs(flip), 0.15));
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    }
+
+    if (alive && t - start < RAIN_MS + 1500) {
+      requestAnimationFrame(frame);
+    } else {
+      canvas.remove();
+    }
+  }
+
+  requestAnimationFrame(frame);
+}
 
 /* Headline typewriter: the gray word cycles through relatable words,
    deleting and retyping letter by letter. Skipped for reduced motion. */

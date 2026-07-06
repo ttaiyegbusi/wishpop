@@ -32,6 +32,17 @@
     <div class="stage" id="stage" aria-hidden="true">
       <noscript><img class="hero-folders" src="assets/hero-folders.svg" alt=""></noscript>
     </div>
+
+    <!-- Waitlist success modal -->
+    <div class="modal" id="successModal" hidden>
+      <div class="modal-backdrop" data-close></div>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalBody">
+        <img class="modal-icon" src="assets/logo-mark.svg" alt="">
+        <h2 id="modalTitle">Your spot is reserved. 🎁</h2>
+        <p id="modalBody">You're on the WishPop waitlist. We'll email you as soon as early access opens. No spoilers, we promise.</p>
+        <button class="btn modal-ok" id="modalOk" type="button">Okay!</button>
+      </div>
+    </div>
   </div>
 
   <script src="js/main.js"></script>
