@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { FolderStage } from './FolderStage';
+import { NavMenu } from './NavMenu';
 import { WaitlistForm, WaitlistFormHandle } from './WaitlistForm';
 
 export function MarketingHero() {
@@ -51,13 +52,7 @@ export function MarketingHero() {
     <div className="page">
       <nav className="nav">
         <div className="logo">WishPop</div>
-        <button
-          className="btn"
-          type="button"
-          onClick={() => waitlistRef.current?.focusEmail()}
-        >
-          Join waitlist
-        </button>
+        <NavMenu />
       </nav>
 
       <section className="hero">

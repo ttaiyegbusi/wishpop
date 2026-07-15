@@ -73,6 +73,88 @@ select {
   cursor: not-allowed;
 }
 
+.nav-menu {
+  position: relative;
+}
+
+.nav-menu-trigger {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: #111111;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.nav-menu-trigger:hover {
+  background: #000000;
+  transform: translateY(-1px);
+}
+
+.nav-menu-trigger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #FFFFFF;
+  border-radius: 2px;
+}
+
+.nav-menu-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 220px;
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 10px;
+  box-shadow: 0 16px 50px rgba(17, 17, 17, 0.14);
+  animation: menu-in 160ms cubic-bezier(0.25, 1, 0.4, 1) both;
+}
+
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.nav-menu-item {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: #111111;
+  text-decoration: none;
+  padding: 12px 14px;
+  border-radius: 10px;
+  transition: background 120ms ease;
+}
+
+.nav-menu-item:hover {
+  background: #F2F2F2;
+}
+
+.nav-menu-cta {
+  background: #111111;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+.nav-menu-cta:hover {
+  background: #000000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-menu-panel { animation: none; }
+}
+
 .hero {
   max-width: 1000px;
   margin: 140px auto 0;
