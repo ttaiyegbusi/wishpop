@@ -270,7 +270,7 @@ h1 .gray {
 
 .stage {
   position: absolute;
-  bottom: 0;
+  bottom: -40px;
   left: 0;
   right: 0;
   display: flex;
@@ -450,7 +450,7 @@ code {
     position: static;
     flex: 1 1 auto;
     min-height: 0;
-    margin-top: 12px;
+    margin-top: 28px;
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -503,7 +503,7 @@ code {
   .form { margin-top: 16px; }
   .form input,
   .form .submit { height: 50px; }
-  .stage { margin-top: 8px; }
+  .stage { margin-top: 18px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
